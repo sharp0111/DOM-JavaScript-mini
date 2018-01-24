@@ -13,4 +13,4 @@ HINT: Look at the Tabs.css classes
 
 You can refer to the study guide provided below, and use any additional sources you prefer if you need more information on the methods listed in the guide.
 
-<a src="https://docs.google.com/document/d/1cmhthvKtbCzV2-Dr4g4akeImlzog2NhIR5J0vtUhJpE/edit"><strong>DOM - Vanilla JavaScript - Study Notes</strong></a>
+[**DOM - Vanilla JavaScript - Study Notes**](https://docs.google.com/document/d/1cmhthvKtbCzV2-Dr4g4akeImlzog2NhIR5J0vtUhJpE/edit)
