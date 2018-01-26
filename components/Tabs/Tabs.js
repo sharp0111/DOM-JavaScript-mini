@@ -16,31 +16,31 @@ class TabItem {
 }
 
 class TabLink {
-  constructor(element, parent) {
+  constructor(element) { // old code: constructor(element, parent) {
     this.element = element;// attach dom element to object
-    this.tabs = parent;// attach parent to object
-    this.tabItem = this.tabs.getTab(this.element.dataset.tab);// assign this to the associated tab using the parent's "getTab" method by passing it the correct data
-    // reassign this.tabItem to be a new instance of TabItem, passing it this.tabItem
-    this.tabItem = new TabItem(this.tabItem);
-    this.element.addEventListener('click', (event) => {
-      event.stopPropagation();
-      this.tabs.updateActive(this);
-      this.select();
-    });
+    // this.tabs = parent;// attach parent to object
+    // this.tabItem = this.tabs.getTab(this.element.dataset.tab);// assign this to the associated tab using the parent's "getTab" method by passing it the correct data
+    // // reassign this.tabItem to be a new instance of TabItem, passing it this.tabItem
+    // this.tabItem = new TabItem(this.tabItem);
+    // this.element.addEventListener('click', (event) => {
+    //   event.stopPropagation();
+    //   this.tabs.updateActive(this);
+    //   this.select();
+    // });
   };
 
   select() {
     // select this link
     this.element.classList.add("Tabs__link-selected");
     // select the associated tab
-    this.tabItem.select();
+    // old code: this.tabItem.select();
   }
 
   deselect() {
     // deselect this link
     this.element.classList.remove("Tabs__link-selected");
     // deselect the associated tab
-    this.tabItem.deselect();
+    // old code: this.tabItem.deselect();
   }
 }
 
@@ -52,6 +52,18 @@ class Tabs {
       return new TabLink(link, this);
     });
     this.activeLink = this.links[0];
+    // this.init();
+    // new code: reference to "Tabs__item"
+    this.items = element.querySelectorAll(".Tabs__item");
+    this.items = Array.from(this.items).map((item) => {
+      return new TabItem(item, this);
+    });
+    this.element.addEventListener('click', (event) => {
+      event.stopPropagation();
+      this.tabs.updateActive(this);
+      this.select();
+    });
+    this.activeItem = this.items[0];
     this.init();
   }
 
@@ -59,13 +71,19 @@ class Tabs {
     // select the first link and tab upon initialization
     this.activeLink = this.links[0];
     this.links[0].select();
+    // new code
+    this.activeItem = this.items[0];
+    this.items[0].select();
   }
 
-  updateActive(newActive) {
+  updateActive(newActiveLink, newActiveItem) {
     // deselect the old active link
     this.activeLink.deselect();
     // assign the new active link
-    this.activeLink = newActive;
+    this.activeLink = newActiveLink;
+    // new code
+    this.activeItem.deselect();
+    this.activeItem = newActiveItem;
   }
 
   getTab(data) {
