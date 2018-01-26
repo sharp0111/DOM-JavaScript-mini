@@ -53,15 +53,15 @@ class Tabs {
     });
     this.activeLink = this.links[0];
     // this.init();
-    // new code: reference to "Tabs__item"
+    // refactoring: reference to "Tabs__item"
     this.items = element.querySelectorAll(".Tabs__item");
     this.items = Array.from(this.items).map((item) => {
       return new TabItem(item, this);
     });
     this.element.addEventListener('click', (event) => {
+      this.updateActive(event.target.dataset.tab);
       event.stopPropagation();
-      this.tabs.updateActive(this);
-      this.select();
+      // this.select();
     });
     this.activeItem = this.items[0];
     this.init();
@@ -71,25 +71,27 @@ class Tabs {
     // select the first link and tab upon initialization
     this.activeLink = this.links[0];
     this.links[0].select();
-    // new code
+    // refactoring
     this.activeItem = this.items[0];
     this.items[0].select();
   }
 
-  updateActive(newActiveLink, newActiveItem) {
+  updateActive(tabIndex) {
     // deselect the old active link
     this.activeLink.deselect();
     // assign the new active link
-    this.activeLink = newActiveLink;
-    // new code
+    this.links[tabIndex-1].select();
+    this.activeLink = this.links[tabIndex-1];
+    // refactoring
     this.activeItem.deselect();
-    this.activeItem = newActiveItem;
+    this.items[tabIndex-1].select();
+    this.activeItem = this.items[tabIndex-1];
   }
 
-  getTab(data) {
-    // use the tab item classname and the data attribute to select the proper tab
-    return this.element.querySelector(`.Tabs__item[data-tab="${data}"]`);
-  }
+  // getTab(data) {
+  //   // use the tab item classname and the data attribute to select the proper tab
+  //   return this.element.querySelector(`.Tabs__item[data-tab="${data}"]`);
+  // }
 
 }
 
