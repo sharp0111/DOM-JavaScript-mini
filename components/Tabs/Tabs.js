@@ -1,4 +1,3 @@
-
 class TabItem {
   constructor(element) {
     // attach dom element to object. Example in Tabs class
