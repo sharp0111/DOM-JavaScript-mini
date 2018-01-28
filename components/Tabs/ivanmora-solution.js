@@ -55,7 +55,7 @@ class TabItem {
         }
       })
   
-      this.activeData = element.querySelector(".Tabs__default");
+      // this.activeData = element.querySelector(".Tabs__default");
       this.activeData = this.activeData ? this.activeData.dataset.tab : null;
       this.updateActive(this.activeData);
     }
