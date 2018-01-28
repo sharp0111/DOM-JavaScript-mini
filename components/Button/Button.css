@@ -1,0 +1,12 @@
+.Button {
+    display: inline-block;
+    padding: 20px;
+    background-color: #fffbef;
+    border: 1px solid black;
+    cursor: default;
+}
+
+.Button--activated {
+    background-color: #f442b9;
+    border: 1px solid gray;
+}

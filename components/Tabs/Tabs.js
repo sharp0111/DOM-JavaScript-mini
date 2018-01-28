@@ -16,84 +16,70 @@ class TabItem {
 }
 
 class TabLink {
-  constructor(element) { // old code: constructor(element, parent) {
+  constructor(element) {
     this.element = element;// attach dom element to object
-    // this.tabs = parent;// attach parent to object
-    // this.tabItem = this.tabs.getTab(this.element.dataset.tab);// assign this to the associated tab using the parent's "getTab" method by passing it the correct data
-    // // reassign this.tabItem to be a new instance of TabItem, passing it this.tabItem
-    // this.tabItem = new TabItem(this.tabItem);
-    // this.element.addEventListener('click', (event) => {
-    //   event.stopPropagation();
-    //   this.tabs.updateActive(this);
-    //   this.select();
-    // });
+    this.element.addEventListener('click', (event) => {
+      //ToDo: fill in event listner
+      event.tabData = this.element.dataset.tab;
+    });
   };
 
   select() {
     // select this link
     this.element.classList.add("Tabs__link-selected");
-    // select the associated tab
-    // old code: this.tabItem.select();
   }
 
   deselect() {
     // deselect this link
     this.element.classList.remove("Tabs__link-selected");
-    // deselect the associated tab
-    // old code: this.tabItem.deselect();
   }
 }
 
 class Tabs {
   constructor(element) {
     this.element = element;// attaches the dom node to the object as "this.element"
-    this.links = element.querySelectorAll(".Tabs__link");
-    this.links = Array.from(this.links).map((link) => {
-      return new TabLink(link, this);
+    this.activeData = null;
+
+    this.links = this.element.querySelectorAll(".Tabs__link");
+    this.links = Array.from(this.links).reduce((obj, link) => {
+      obj[link.dataset.tab] = new TabLink(link);
+      return obj;
+    }, {});
+
+    this.items = this.element.querySelectorAll(".Tabs__item");
+    this.items = Array.from(this.items).reduce((obj, item) => {
+      obj[item.dataset.tab] = new TabItem(item);
+      return obj;
+    }, {});
+
+    this.element.addEventListener('click', event => {
+      if (event.tabData !== undefined) {
+        this.updateActive(event.tabData);
+        event.stopPropagation();
+      }
     });
-    this.activeLink = this.links[0];
-    // this.init();
-    // refactoring: reference to "Tabs__item"
-    this.items = element.querySelectorAll(".Tabs__item");
-    this.items = Array.from(this.items).map((item) => {
-      return new TabItem(item, this);
-    });
-    this.element.addEventListener('click', (event) => {
-      this.updateActive(event.target.dataset.tab);
-      event.stopPropagation();
-      // this.select();
-    });
-    this.activeItem = this.items[0];
+
     this.init();
   }
 
   init() {
-    // select the first link and tab upon initialization
-    this.activeLink = this.links[0];
-    this.links[0].select();
-    // refactoring
-    this.activeItem = this.items[0];
-    this.items[0].select();
+    // select the first link and tab upon ititialization
+    this.activeData = this.element.querySelector(".Tabs__link-default");
+    this.activeData = this.activeData.dataset.tab;
+    this.updateActive(this.activeData);
   }
 
-  updateActive(tabIndex) {
-    // deselect the old active link
-    this.activeLink.deselect();
-    // assign the new active link
-    this.links[tabIndex-1].select();
-    this.activeLink = this.links[tabIndex-1];
-    // refactoring
-    this.activeItem.deselect();
-    this.items[tabIndex-1].select();
-    this.activeItem = this.items[tabIndex-1];
+  updateActive(data) {
+    if (this.activeData !== null) {
+      this.links[this.activeData].deselect();
+      this.items[this.activeData].deselect();
+    }
+
+    this.links[data].select();
+    this.items[data].select();
+    this.activeData = data;
   }
-
-  // getTab(data) {
-  //   // use the tab item classname and the data attribute to select the proper tab
-  //   return this.element.querySelector(`.Tabs__item[data-tab="${data}"]`);
-  // }
-
 }
 
-let tabs = document.querySelectorAll(".Tabs");
-tabs = Array.from(tabs).map(tabs => new Tabs(tabs));
+let allTabs = document.querySelectorAll(".Tabs");
+allTabs = Array.from(allTabs).map(tabs => new Tabs(tabs));
